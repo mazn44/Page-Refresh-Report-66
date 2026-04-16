@@ -3,579 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تقرير أداء صفحات التواصل - معرض إيفان</title>
+    <title>معرض إيفان | استراتيجية التسويق والظهور الرقمي</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* =========================================
+           متغيرات النظام (الوضع المظلم والفاتح)
+           ========================================= */
         :root {
-            /* Light Theme Variables */
-            --bg-color: #eef2f5;
-            --text-color: #1a1a2e;
-            --glass-bg: rgba(255, 255, 255, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.4);
-            --glass-shadow: rgba(0, 0, 0, 0.05);
-            --primary-color: #007aff;
-            --sidebar-bg: rgba(255, 255, 255, 0.8);
-            --card-hover: rgba(255, 255, 255, 0.9);
-            --table-header: rgba(0, 122, 255, 0.1);
+            --bg-color: #0b0f19;
+            --text-main: #f8f9fa;
+            --text-muted: #a0aec0;
+            --glass-bg: rgba(20, 30, 48, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+            
+            --neon-blue: #00d2ff;
+            --neon-purple: #a855f7;
+            --neon-green: #10b981;
+            --neon-orange: #f97316;
+            --neon-red: #ef4444;
+            --neon-cyan: #06b6d4;
+            
+            --card-radius: 20px;
+            --transition-speed: 0.4s;
         }
 
-        [data-theme="dark"] {
-            /* Dark Theme Variables */
-            --bg-color: #0f172a;
-            --text-color: #f8fafc;
-            --glass-bg: rgba(30, 41, 59, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: rgba(0, 0, 0, 0.2);
-            --primary-color: #3b82f6;
-            --sidebar-bg: rgba(15, 23, 42, 0.8);
-            --card-hover: rgba(30, 41, 59, 0.9);
-            --table-header: rgba(59, 130, 246, 0.2);
+        [data-theme="light"] {
+            --bg-color: #f0f4f8;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.05);
+            
+            --neon-blue: #0284c7;
+            --neon-purple: #7e22ce;
+            --neon-green: #059669;
+            --neon-orange: #ea580c;
+            --neon-red: #dc2626;
+            --neon-cyan: #0891b2;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif; scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(0,122,255,0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(59,130,246,0.1) 0px, transparent 50%);
-            background-attachment: fixed;
+            background-color: var(--bg-color); color: var(--text-main);
+            overflow-x: hidden; transition: background-color var(--transition-speed);
         }
 
-        /* Glassmorphism Utilities */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 var(--glass-shadow);
+        /* خلفية الجزيئات */
+        #particles-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
         }
 
-        /* Sidebar Styles */
-        .sidebar {
-            width: 280px;
-            height: 100vh;
-            position: fixed;
-            right: 0;
-            top: 0;
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-left: 1px solid var(--glass-border);
-            padding: 2rem 1rem;
-            z-index: 1000;
-            transform: translateX(0);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: var(--neon-blue); border-radius: 10px; }
+
+        /* =========================================
+           شريط التنقل العلوي
+           ========================================= */
+        header {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border); padding: 12px 30px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .sidebar.hidden {
-            transform: translateX(100%);
+        .brand { display: flex; align-items: center; gap: 15px; }
+        .brand-img {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 2px solid var(--neon-red); object-fit: contain; background: #fff; padding: 2px;
+        }
+        .brand h1 {
+            font-size: 24px; font-weight: 900; letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--neon-red), var(--text-main));
+            -webkit-background-clip: text; color: transparent; text-transform: uppercase;
         }
 
-        .sidebar-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--glass-border);
+        .btn-theme {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
+            color: var(--text-main); padding: 8px 20px; border-radius: 20px;
+            cursor: pointer; font-size: 15px; font-weight: bold; display: flex; align-items: center; gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-theme:hover { background: var(--neon-blue); color: #fff; }
+
+        /* =========================================
+           القائمة الجانبية
+           ========================================= */
+        aside {
+            width: 280px; background: var(--glass-bg); backdrop-filter: blur(20px);
+            border-left: 1px solid var(--glass-border); position: fixed; right: 0; top: 75px;
+            height: calc(100vh - 75px); padding: 20px 10px; overflow-y: auto; z-index: 999;
+        }
+        
+        aside ul { list-style: none; }
+        aside ul li { margin-bottom: 8px; }
+        aside ul li a {
+            display: flex; flex-direction: column; padding: 12px 15px;
+            color: var(--text-main); text-decoration: none; border-radius: 12px; transition: 0.3s;
+        }
+        aside ul li a:hover { background: rgba(255, 255, 255, 0.1); transform: translateX(-5px); border-right: 3px solid var(--neon-blue); }
+        aside ul li a strong { font-size: 15px; color: var(--neon-blue); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        aside ul li a span { font-size: 12px; color: var(--text-muted); }
+
+        /* =========================================
+           المحتوى الرئيسي
+           ========================================= */
+        main { margin-right: 280px; padding: 100px 30px 60px; }
+
+        .hero { text-align: center; margin-bottom: 60px; }
+        .hero h2 { font-size: 3em; font-weight: 900; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0, 210, 255, 0.3); }
+        .hero p { font-size: 1.15em; color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.6;}
+        
+        .author-badge {
+            display: inline-block; background: rgba(168, 85, 247, 0.15); border: 1px solid var(--neon-purple);
+            color: var(--neon-purple); padding: 8px 25px; border-radius: 30px; font-weight: bold; margin-bottom: 20px;
         }
 
-        .sidebar-header h2 {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+        .dept-section { margin-bottom: 70px; opacity: 0; transform: translateY(30px); transition: 0.6s ease; }
+        .dept-section.visible { opacity: 1; transform: translateY(0); }
+
+        .dept-header {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 30px;
+            padding-bottom: 15px; border-bottom: 1px solid var(--glass-border);
+        }
+        .dept-header i { font-size: 30px; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 15px; }
+        .dept-header h3 { font-size: 2em; font-weight: 800; display: flex; flex-direction: column; }
+        .dept-header h3 span { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 5px; }
+
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; }
+
+        .glass-card {
+            background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+            border-radius: var(--card-radius); padding: 30px; box-shadow: var(--glass-shadow); transition: 0.4s;
+        }
+        .glass-card:hover { transform: translateY(-5px); border-color: var(--neon-blue); }
+
+        .scenario-title {
+            font-size: 16px; font-weight: 800; margin-bottom: 20px; color: var(--neon-blue);
+            display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
         }
 
-        .nav-links {
-            list-style: none;
-        }
+        /* القوائم والمربعات */
+        .list-box { margin-bottom: 25px; }
+        .list-box h4 { font-size: 16px; font-weight: 800; margin-bottom: 15px; display: inline-block; padding: 6px 15px; border-radius: 8px; }
+        .list-allowed h4 { background: rgba(16, 185, 129, 0.2); color: var(--neon-green); }
+        .list-forbidden h4 { background: rgba(239, 68, 68, 0.2); color: var(--neon-red); }
+        
+        .list-box ul { list-style: none; padding-right: 10px; }
+        .list-box ul li { position: relative; padding-right: 25px; margin-bottom: 12px; font-size: 15px; font-weight: 500; line-height: 1.6; }
+        .list-allowed ul li::before { content: '✓'; color: var(--neon-green); position: absolute; right: 0; font-weight: bold; }
+        .list-forbidden ul li::before { content: '✗'; color: var(--neon-red); position: absolute; right: 0; font-weight: bold; }
 
-        .nav-links li {
-            margin-bottom: 0.5rem;
-        }
+        /* الصناديق التحليلية */
+        .system-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
+        .system-item { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 15px; border-right: 4px solid; }
+        [data-theme="light"] .system-item { background: rgba(0,0,0,0.05); }
+        .system-item .letter { font-size: 24px; font-weight: 900; width: 45px; text-align: center; }
+        .system-item .desc h5 { font-size: 16px; margin-bottom: 5px; font-weight: 800; }
+        .system-item .desc p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
 
-        .nav-links a {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            color: var(--text-color);
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
+        /* نصوص الميديا والردود */
+        .bubble-content { background: rgba(0, 0, 0, 0.25); padding: 18px; border-radius: 12px; border-bottom-right-radius: 0; font-size: 15px; line-height: 1.6; font-weight: 500; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px; }
+        [data-theme="light"] .bubble-content { background: #fff; border-color: rgba(0,0,0,0.08); }
+        .lang-title { font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
+        .ku-text { color: var(--neon-blue); font-weight: 700; margin-bottom: 8px; }
 
-        .nav-links a:hover {
-            background: var(--primary-color);
-            color: #fff;
-            transform: translateX(-5px);
-        }
+        .golden-rule { background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), transparent); border: 1px solid var(--neon-yellow); text-align: center; padding: 20px; border-radius: 15px; margin-top: 25px; }
+        .golden-rule i { color: var(--neon-yellow); font-size: 28px; margin-bottom: 12px; }
+        .golden-rule p { font-size: 15px; font-weight: 700; line-height: 1.6; }
 
-        .nav-icon {
-            width: 20px;
-            height: 20px;
-            margin-left: 10px;
-            fill: currentColor;
-        }
+        footer { text-align: center; padding: 30px; margin-top: 50px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 14px; font-weight: bold; }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-right: 280px;
-            padding: 2rem;
-            transition: margin-right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-width: 1200px;
-        }
-
-        .main-content.expanded {
-            margin-right: 0;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            margin-bottom: 2rem;
-            position: sticky;
-            top: 1rem;
-            z-index: 100;
-        }
-
-        .toggle-btn, .theme-btn {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            cursor: pointer;
-            padding: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
-
-        .toggle-btn:hover, .theme-btn:hover {
-            background: var(--glass-border);
-        }
-
-        /* Typography & Layout */
-        .hero-section {
-            text-align: center;
-            padding: 3rem 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .hero-section h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(45deg, var(--primary-color), #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .hero-section p {
-            font-size: 1.1rem;
-            opacity: 0.8;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .card {
-            padding: 2rem;
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease, background 0.3s ease;
-            animation: fadeIn 0.6s ease-out forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            background: var(--card-hover);
-        }
-
-        .card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .card p, .card li {
-            line-height: 1.8;
-            margin-bottom: 0.8rem;
-            opacity: 0.9;
-        }
-
-        .card ul, .card ol {
-            padding-right: 2rem;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 1.5rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: right;
-        }
-
-        th, td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        th {
-            background: var(--table-header);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        tr:hover td {
-            background: rgba(0, 122, 255, 0.05);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .stat-box {
-            text-align: center;
-            padding: 1.5rem;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(0,122,255,0.1), rgba(0,122,255,0));
-            border: 1px solid var(--glass-border);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(100%);
-            }
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-right: 0;
-                padding: 1rem;
-            }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-color);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
+        @media (max-width: 992px) {
+            aside { display: none; }
+            main { margin-right: 0; padding: 100px 20px 60px; }
+            .grid-cards { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar glass" id="sidebar">
-        <div class="sidebar-header">
-            <h2>معرض إيفان للأثاث</h2>
-            <p style="font-size: 0.9rem; opacity: 0.7;">إدارة التسويق والتطوير</p>
+    <canvas id="particles-canvas"></canvas>
+
+    <header>
+        <div class="brand">
+            <img src="1000597074.png" alt="Ivan Show" class="brand-img" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjIwIiByPSIxNSIgZmlsbD0iI2VmNDQ0NCIvPjx0ZXh0IHg9IjUwIiB5PSI4NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjcwIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiI+aTwvdGV4dD48L3N2Zz4='">
+            <h1>Ivan Show</h1>
         </div>
-        <ul class="nav-links">
-            <li><a href="#intro"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z"/></svg>المقدمة والملخص</a></li>
-            <li><a href="#analysis"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm16 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>تحليل الوضع الحالي</a></li>
-            <li><a href="#pricing"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>سيكولوجية التسعير</a></li>
-            <li><a href="#digital"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>التقييم الرقمي</a></li>
-            <li><a href="#kpi"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>مؤشرات الأداء</a></li>
-            <li><a href="#plan"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>خطة التنفيذ الشاملة</a></li>
-            <li><a href="#quick-fix"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>خطة العلاج السريعة</a></li>
+        <button class="btn-theme" id="themeToggle"><i class="fa-solid fa-moon"></i> <span>المود</span></button>
+    </header>
+
+    <aside>
+        <ul>
+            <li><a href="#analysis"><strong><i class="fa-solid fa-magnifying-glass-chart"></i> 1. تحليل الوضع الحالي</strong><span>لماذا تسبقنا المعارض الصغيرة؟</span></a></li>
+            <li><a href="#seo-maps"><strong><i class="fa-solid fa-map-location-dot"></i> 2. اكتساح خرائط جوجل</strong><span>الظهور في أول نتائج البحث</span></a></li>
+            <li><a href="#psychology"><strong><i class="fa-solid fa-brain"></i> 3. سيكولوجية التسعير</strong><span>معالجة انطباع "السعر غالي"</span></a></li>
+            <li><a href="#content"><strong><i class="fa-solid fa-video"></i> 4. استراتيجية المحتوى</strong><span>قواعد النشر والردود</span></a></li>
+            <li><a href="#ads"><strong><i class="fa-solid fa-bullseye"></i> 5. الإعلانات وإعادة الاستهداف</strong><span>صرف الميزانية بذكاء</span></a></li>
+            <li><a href="#action-plan"><strong><i class="fa-solid fa-rocket"></i> 6. الخطة التنفيذية</strong><span>خطوات العمل لأول 30 يوم</span></a></li>
         </ul>
-    </nav>
+    </aside>
 
-    <main class="main-content" id="mainContent">
-        
-        <div class="top-bar glass">
-            <button class="toggle-btn" id="toggleSidebar" aria-label="تبديل القائمة">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            </button>
-            <div style="font-weight: bold; color: var(--primary-color);">خطة تطوير وتقييم الأداء</div>
-            <button class="theme-btn" id="toggleTheme" aria-label="تبديل المظهر">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm1-11h-2v3H8v2h3v3h2v-3h3v-2h-3V8z"/></svg>
-            </button>
+    <main>
+        <div class="hero">
+            <div class="author-badge"><i class="fa-solid fa-pen-nib"></i> إعداد وتقديم: مازن داوود | إدارة التسويق والتطوير</div>
+            <h2>خطة اكتساح السوق وتصدر محركات البحث</h2>
+            <p>تقرير بحثي شامل مخصص <strong>حصرياً لتطوير واجهة المعرض الرقمية</strong>. يحلل التحديات، يعالج مشكلة الانطباع بالأسعار العالية، ويضع خطة عملية لجذب العملاء وتصدر نتائج (Google Maps) والذكاء الاصطناعي في دهوك.</p>
         </div>
 
-        <section class="hero-section glass delay-1" id="intro">
-            <h4 style="color: var(--primary-color); margin-bottom: 10px;">معرض إيفان - تقرير قسم التسويق</h4>
-            <h5 style="margin-bottom: 20px; opacity: 0.8;">إعداد: مازن داوود</h5>
-            <h1>خطة النشر ورفع التقييمات</h1>
-            <p>تقرير بحثي شامل: التحديات، السمعة، الأداء الرقمي، وخطة التطوير المتكاملة لمعرض إيفان للأثاث في دهوك لتصدر نتائج البحث وجذب العملاء بحلول عصرية.</p>
+        <div class="dept-section" id="analysis">
+            <div class="dept-header" style="color:var(--neon-red);">
+                <i class="fa-solid fa-magnifying-glass-chart" style="border-color:var(--neon-red);"></i>
+                <h3 style="color:var(--neon-red);">1. تحليل الوضع الحالي (الحقيقة المرة) <span>لماذا تظهر معارض أصغر من إيفان قبلنا في بحث Google؟</span></h3>
+            </div>
             
-            <div class="stats-grid">
-                <div class="stat-box glass">
-                    <div class="stat-number">الهدف 1</div>
-                    <div>تصدر الخرائط ومحركات البحث</div>
+            <div class="grid-cards">
+                <div class="glass-card">
+                    <div class="scenario-title" style="color:var(--neon-red); border-color:var(--neon-red);">خوارزمية Google Maps لا تهتم بحجم المعرض!</div>
+                    <p style="margin-bottom: 20px; color: var(--text-muted); line-height: 1.6;">تعتمد خوارزمية جوجل على 3 أسس فقط لترتيب المعارض، وبسبب التضارب الحالي في عناويننا (زركا، مالطا، الصناعة)، جوجل يعتبر بياناتنا غير موثوقة. الأسس هي:</p>
+                    
+                    <div class="system-grid">
+                        <div class="system-item" style="border-color:var(--neon-red);">
+                            <div class="letter" style="color:var(--neon-red);"><i class="fa-solid fa-street-view"></i></div>
+                            <div class="desc"><h5 style="color:var(--neon-red);">1. القرب (Distance)</h5><p>إذا كان الزبون قريباً من معرض صغير، سيظهر له أولاً. (هذا عامل لا نتحكم به).</p></div>
+                        </div>
+                        <div class="system-item" style="border-color:var(--neon-red);">
+                            <div class="letter" style="color:var(--neon-red);"><i class="fa-solid fa-link"></i></div>
+                            <div class="desc"><h5 style="color:var(--neon-red);">2. الملاءمة (Relevance)</h5><p>هل ملفنا يحتوي على الكلمات المفتاحية التي يبحث عنها الناس؟ (أثاث دهوك، غرف نوم، تبديل، مستعمل). إذا كان الوصف ضعيفاً، ستتجاهلنا الخوارزمية.</p></div>
+                        </div>
+                        <div class="system-item" style="border-color:var(--neon-red);">
+                            <div class="letter" style="color:var(--neon-red);"><i class="fa-solid fa-star"></i></div>
+                            <div class="desc"><h5 style="color:var(--neon-red);">3. الشهرة (Prominence) - أهم نقطة!</h5><p>تقاس الشهرة بعدد التقييمات، سرعة وصولها، والردود عليها. المعارض الصغيرة تتفوق علينا هنا لأن تقييماتنا قليلة مقارنة بحجمنا الضخم.</p></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-box glass">
-                    <div class="stat-number">الهدف 2</div>
-                    <div>تغيير الانطباع حول الأسعار</div>
-                </div>
-                <div class="stat-box glass">
-                    <div class="stat-number">الهدف 3</div>
-                    <div>رفع تقييمات العملاء الإيجابية</div>
+
+                <div class="glass-card">
+                    <div class="scenario-title" style="color:var(--neon-red); border-color:var(--neon-red);">لماذا حساباتنا لا تجلب زبائن بشكل كافٍ؟</div>
+                    <div class="list-box list-forbidden">
+                        <h4><i class="fa-solid fa-xmark"></i> المشكلة الحالية (الكتالوج الصامت)</h4>
+                        <ul>
+                            <li>ننشر المحتوى كـ "كتالوج": مجرد صورة + سعر + انتهى. هذا الأسلوب مات في 2026.</li>
+                            <li>عدم توحيد البيانات (NAP): الاسم، العنوان، ورقم الهاتف تختلف من فيسبوك إلى إنستغرام إلى جوجل، مما يربك محركات البحث والذكاء الاصطناعي.</li>
+                            <li>غياب "قصة المنتج": لا نشرح القيمة أو الضمان أو جودة الخشب بشكل كافٍ.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section class="card glass delay-2" id="analysis">
-            <h3>أولاً: مراجعة وتحليل الوضع الحالي</h3>
-            <p>يُعد معرض إيفان للأثاث في دهوك أحد أبرز معارض الأثاث في المنطقة، حيث يقدم مجموعة واسعة من المنتجات. إلا أن المعرض يواجه تحديات تتعلق بانطباعات ارتفاع الأسعار وتفاوت التقييمات. إليك تحليل دقيق للوضع:</p>
-            
-            <h4 style="margin-top: 1.5rem; color: var(--primary-color);">تحليل التواجد على خرائط كوكل</h4>
-            <ul>
-                <li><strong>نقاط القوة:</strong> عنوان واضح في منطقة زركا، ساعات عمل منتظمة، تصنيف واضح كمخزن أثاث.</li>
-                <li><strong>نقاط الضعف:</strong> التقييم العام يحتاج إلى رفع للوصول إلى الصدارة، الردود الرسمية على التقييمات غائبة، نقص في الصور الاحترافية عالية الدقة التي تبرز جودة المعروضات.</li>
-            </ul>
-
-            <h4 style="margin-top: 1.5rem; color: var(--primary-color);">تحليل المشاعر والانطباعات الرقمية</h4>
-            <p>من خلال تحليل التقييمات الحالية:</p>
-            <ul>
-                <li><strong>المشاعر الإيجابية:</strong> إشادة بجودة المنتجات، التنوع، وحسن الاستقبال.</li>
-                <li><strong>المشاعر السلبية:</strong> تتركز حول الانطباع بـ "ارتفاع الأسعار" أو عدم وضوح العروض الترويجية.</li>
-            </ul>
-        </section>
-
-        <section class="card glass delay-3" id="pricing">
-            <h3>ثانياً: تحليل أسباب الانطباعات السلبية حول الأسعار</h3>
-            <p>ارتفاع أسعار الأثاث يرتبط بعوامل موضوعية (تكلفة المواد، النقل، جودة التشطيب). ولكن، العميل يرى السعر غالياً عندما لا يدرك القيمة. لتغيير ذلك يجب التركيز على سيكولوجية التسعير:</p>
-            
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>المشكلة</th>
-                            <th>السبب الذهني للعميل</th>
-                            <th>الحل المقترح والتنفيذ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>انطباع الغلاء</td>
-                            <td>مقارنة سطحية دون النظر للجودة</td>
-                            <td>شرح سبب السعر في كل قطعة: نوع الخشب (زان)، الجودة، الضمان، التصنيع.</td>
-                        </tr>
-                        <tr>
-                            <td>التردد في الشراء</td>
-                            <td>غياب المحفز اللحظي (الندرة)</td>
-                            <td>إطلاق عروض مؤقتة وأسعار منتهية بـ 9 (مثل 599,000 بدلاً من 600,000).</td>
-                        </tr>
-                        <tr>
-                            <td>الشك في القيمة</td>
-                            <td>عدم وضوح الخدمات المضافة</td>
-                            <td>الشفافية التامة: توضيح أن السعر يشمل التوصيل، التركيب، وضمان ما بعد البيع.</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="dept-section" id="seo-maps">
+            <div class="dept-header" style="color:var(--neon-blue);">
+                <i class="fa-solid fa-map-location-dot" style="border-color:var(--neon-blue);"></i>
+                <h3 style="color:var(--neon-blue);">2. استراتيجية السيو (SEO) واكتساح الخرائط <span>تحويل معرض إيفان إلى النتيجة الأولى في دهوك.</span></h3>
             </div>
-        </section>
-
-        <section class="card glass delay-4" id="digital">
-            <h3>ثالثاً: تقييم الأداء الرقمي واستراتيجية التقييمات</h3>
-            <p>مع تطور محركات البحث واعتمادها على الذكاء الاصطناعي (AI/SGE)، أصبح السيو المحلي (Local SEO) ضرورة قصوى. لكي يظهر اسم معرض إيفان في بداية البحث يجب تطبيق الآتي:</p>
             
-            <ol>
-                <li><strong>تحسين الوصف (NAP):</strong> توحيد الاسم، العنوان، ورقم الهاتف في جميع الأماكن الإلكترونية بدقة عالية.</li>
-                <li><strong>استراتيجية الكلمات المفتاحية:</strong> استخدام كلمات مثل "أثاث جديد دهوك"، "تجهيز بيت في دهوك"، "تصنيع دواوين دهوك".</li>
-                <li><strong>آلية جلب التقييمات الأخلاقية:</strong> 
-                    <ul>
-                        <li>توفير QR Code داخل المعرض يوجه مباشرة لصفحة التقييم.</li>
-                        <li>طلب التقييم مباشرة بعد إتمام البيع عبر رسالة شكر واحترافية.</li>
-                        <li>عدم استخدام تقييمات وهمية، بل تحفيز العملاء الراضين لترك تجاربهم الحقيقية.</li>
-                    </ul>
-                </li>
-                <li><strong>إدارة الأزمات والردود:</strong> الرد على جميع التقييمات. للتقييم السلبي: "نشكر لك ملاحظتك ونأسف لأي إزعاج، تم تحويل ملاحظتك للإدارة وندعوك لزيارتنا لتقديم حل يرضيك".</li>
-            </ol>
-        </section>
+            <div class="grid-cards">
+                <div class="glass-card">
+                    <div class="scenario-title" style="color:var(--neon-blue); border-color:var(--neon-blue);">الخطوات العملية لـ Google Business Profile</div>
+                    
+                    <div class="list-box list-allowed">
+                        <h4><i class="fa-solid fa-check-circle"></i> المطلوب تنفيذه فوراً</h4>
+                        <ul>
+                            <li><strong>توحيد البيانات (NAP):</strong> تحديث الاسم ليكون: "معرض إيفان - أثاث دهوك (جديد ومستعمل)". توحيد العنوان ورقم الهاتف في كل مكان.</li>
+                            <li><strong>رفع 30 صورة احترافية:</strong> لجوجل مابس (صور للواجهة، الطوابق، التحميل، ولقطات من داخل المعرض).</li>
+                            <li><strong>تفعيل نظام التقييم الإجباري:</strong> بعد كل عملية شراء مباشرة، نطلب من الزبون التقييم بأدب عبر QR Code أو رابط مباشر.</li>
+                            <li><strong>الرد على كل التقييمات:</strong> حتى لو كانت 5 نجوم بدون تعليق، يجب الرد بـ "شكراً لك عيني، نتشرف بخدمتكم دائماً".</li>
+                        </ul>
+                    </div>
 
-        <section class="card glass" id="kpi">
-            <h3>رابعاً: تحسين تجربة العملاء ومؤشرات الأداء (KPI)</h3>
-            <p>النجاح يتطلب قياس مستمر. إليك أهم المؤشرات التي يجب متابعتها شهرياً لضمان نمو المعرض:</p>
-            
-            <div class="stats-grid" style="margin-bottom: 1.5rem;">
-                <div class="stat-box glass">
-                    <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">عدد التقييمات الجديدة</div>
-                    <div class="stat-number" style="font-size: 1.5rem;">+20 شهرياً</div>
-                </div>
-                <div class="stat-box glass">
-                    <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">متوسط التقييم</div>
-                    <div class="stat-number" style="font-size: 1.5rem;">≥ 4.5 / 5</div>
-                </div>
-                <div class="stat-box glass">
-                    <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">معدل الزيارات للمعرض</div>
-                    <div class="stat-number" style="font-size: 1.5rem;">+15% نمو</div>
+                    <div class="golden-rule" style="border-color:var(--neon-blue);">
+                        <i class="fa-solid fa-robot" style="color:var(--neon-blue);"></i>
+                        <p>الذكاء الاصطناعي (مثل ChatGPT) يستمد إجاباته المحلية من دقة معلوماتنا في جوجل. إذا وحدنا بياناتنا، سنظهر كأول اقتراح لأي شخص يسأل الذكاء الاصطناعي عن أثاث في دهوك.</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <h4>برامج الولاء والمسابقات</h4>
-            <p>يجب إطلاق حملات ترويجية لجذب الزبائن، مثل مسابقات "شارك وادخل السحب" للحصول على قطعة أثاث مميزة أو خصم كبير. هذا النوع من الحملات يخلق تفاعلاً عضوياً هائلاً ويوسع قاعدة الانتشار.</p>
-        </section>
-
-        <section class="card glass" id="plan">
-            <h3>خامساً: خطة التنفيذ العملي والميزانية</h3>
-            <p>لتحويل هذا التقرير إلى واقع، يجب الالتزام بجدول زمني صارم يتم تنفيذه خطوة بخطوة:</p>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>المرحلة</th>
-                            <th>المدة الزمنية</th>
-                            <th>الأنشطة الرئيسية</th>
-                            <th>الميزانية التقديرية (دينار)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>تحسين وتحديث الخرائط</td>
-                            <td>الأسبوع 1</td>
-                            <td>تحديث الوصف، أوقات العمل، رفع صور احترافية وتجهيز قوالب الردود.</td>
-                            <td>100,000</td>
-                        </tr>
-                        <tr>
-                            <td>إنتاج محتوى احترافي</td>
-                            <td>أسبوعان</td>
-                            <td>جلسات تصوير للقطع، التركيز على القصة والجودة والضمان.</td>
-                            <td>1,000,000</td>
-                        </tr>
-                        <tr>
-                            <td>تدريب فريق المبيعات</td>
-                            <td>الأسبوع 2</td>
-                            <td>توحيد أسلوب الرد، شرح القيمة بدل السعر، تفعيل نظام طلب التقييم.</td>
-                            <td>500,000</td>
-                        </tr>
-                        <tr>
-                            <td>حملات الترويج والمسابقات</td>
-                            <td>مستمر</td>
-                            <td>إطلاق مسابقات سحوبات، عروض محدودة الوقت.</td>
-                            <td>2,000,000</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="dept-section" id="psychology">
+            <div class="dept-header" style="color:var(--neon-orange);">
+                <i class="fa-solid fa-brain" style="border-color:var(--neon-orange);"></i>
+                <h3 style="color:var(--neon-orange);">3. سيكولوجية التسعير <span>كيف نرد على كلمة "أسعاركم غالية"؟</span></h3>
             </div>
-        </section>
-
-        <section class="card glass" style="border: 1px solid var(--primary-color);" id="quick-fix">
-            <h3>الخلاصة: خطة العلاج السريعة لمعرض إيفان</h3>
-            <ul style="list-style-type: none; padding: 0;">
-                <li style="margin-bottom: 15px;">✅ <strong>اليوم الأول:</strong> تحديث وصف الخرائط بالكامل + كتابة ردود جاهزة للفريق تشرح القيمة مقابل السعر.</li>
-                <li style="margin-bottom: 15px;">✅ <strong>اليوم الثاني:</strong> البدء بطلب التقييمات من الزبائن الحاليين بشكل مباشر دون خجل لرفع التقييمات فوراً.</li>
-                <li style="margin-bottom: 15px;">✅ <strong>الأسبوع الأول:</strong> تثبيت أسلوب رد موحد، لا نرد على السعر فقط بل نشرح (الخشب، الجودة، الضمان).</li>
-                <li style="margin-bottom: 15px;">✅ <strong>القاعدة الذهبية:</strong> "الوضوح يقتل الشك". كل قطعة مهمة لها قصة، وكل عرض يجب أن يكون واضحاً ومحدوداً.</li>
-            </ul>
-            <div style="margin-top: 2rem; text-align: center; font-weight: bold; color: var(--primary-color);">
-                بتنفيذ هذه الخطوات بدقة، سيصبح معرض إيفان الرقم واحد للباحثين عن الجودة في دهوك.
+            
+            <div class="grid-cards">
+                <div class="glass-card" style="grid-column: 1 / -1;">
+                    <p style="margin-bottom: 20px; line-height: 1.6;"><strong>الزبون لا يرى السعر غالياً إلا إذا لم يدرك القيمة.</strong> المنافس الذكي لا يبيع منتجاً، بل يبيع "إحساساً وقيمة". لا تدافع عن السعر، بل اشرح لماذا هو هكذا.</p>
+                    
+                    <div class="system-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <div class="system-item" style="border-color:var(--neon-orange);">
+                            <div class="desc">
+                                <h5 style="color:var(--neon-orange);">المشكلة: مقارنة سطحية</h5>
+                                <p>الزبون يقارن كرسياً بكرسي عند المنافس بدون النظر للخشب. <strong>الحل:</strong> في كل فيديو أو منشور، اذكر تفاصيل الخشب (زان، MDF عالي الجودة)، الإسفنج، والضمان.</p>
+                            </div>
+                        </div>
+                        <div class="system-item" style="border-color:var(--neon-orange);">
+                            <div class="desc">
+                                <h5 style="color:var(--neon-orange);">المشكلة: الشك في القيمة المضافة</h5>
+                                <p>الزبون يظن أن السعر للمنتج فقط. <strong>الحل:</strong> إبراز الشفافية، والتأكيد دائماً على أن خدمات (التركيب الاحترافي، والتوصيل الآمن، وخدمة ما بعد البيع) مدمجة في راحة الزبون.</p>
+                            </div>
+                        </div>
+                        <div class="system-item" style="border-color:var(--neon-orange);">
+                            <div class="desc">
+                                <h5 style="color:var(--neon-orange);">المشكلة: غياب المحفز اللحظي (الندرة)</h5>
+                                <p>الزبون يؤجل الشراء. <strong>الحل:</strong> استخدام تسعير ينتهي بـ 9 (مثال: 599,000 بدل 600 ألف)، وإطلاق عروض محددة بوقت قصير أو كمية محدودة (مثلاً: 3 غرف متبقية فقط).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+
+        <div class="dept-section" id="content">
+            <div class="dept-header" style="color:var(--neon-purple);">
+                <i class="fa-solid fa-video" style="border-color:var(--neon-purple);"></i>
+                <h3 style="color:var(--neon-purple);">4. قسم التسويق والمحتوى <span>قواعد النشر، الفيديوهات، وردود خدمة العملاء.</span></h3>
+            </div>
+            
+            <div class="grid-cards">
+                <div class="glass-card">
+                    <div class="scenario-title" style="color:var(--neon-purple); border-color:var(--neon-purple);">المبادئ الذهبية والممنوعات الصارمة</div>
+                    <div class="list-box list-allowed">
+                        <h4><i class="fa-solid fa-check-circle"></i> منهجية العمل المطلوبة</h4>
+                        <ul>
+                            <li><strong>يجب تصوير فيديو "فضفحة السعر":</strong> (مثال: ليش هالقطعة سعرها هيك؟ تعا أشرحلك الجودة من جوا). يكسر فكرة الغلاء.</li>
+                            <li>تصوير فيديوهات "قبل وبعد" للغرف، وفيديوهات آراء زبائن حقيقيين (يبني ثقة فورية).</li>
+                            <li><strong>الشفافية الصادمة في المستعمل:</strong> إظهار عيوب القطعة (الخدوش) بوضوح تام قبل إظهار مميزاتها. هذه أقوى استراتيجية لكسب ثقة الزبون.</li>
+                            <li>الالتزام بقاعدة المحتوى (70% تعليمي ونصائح ديكور، 20% استعراض جودة، 10% بيع مباشر وعروض).</li>
+                        </ul>
+                    </div>
+
+                    <div class="list-box list-forbidden">
+                        <h4><i class="fa-solid fa-ban"></i> محظورات قسم التسويق</h4>
+                        <ul>
+                            <li><strong>يمنع منعاً باتاً نشر أي فيديو أو صورة أو بوست بدون المراجعة والموافقة من مدير التسويق (مازن).</strong></li>
+                            <li>يمنع استخدام الموسيقى الصاخبة، الانتقالات المزعجة (Transitions)، أو الفلاتر المبالغ فيها. الهيبة والوضوح هما الأساس.</li>
+                            <li>يمنع إزعاج المتابعين بالنشر المفرط؛ الحد الأقصى هو فيديو واحد كل ساعة.</li>
+                            <li>يمنع السخرية من المنافسين أو تصوير زبائن بدون إذن صريح.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="scenario-title" style="color:var(--neon-purple); border-color:var(--neon-purple);">نصوص معتمدة (للفيديوهات والرسائل)</div>
+                    
+                    <div class="bubble-content">
+                        <div class="lang-title">خطاف الفيديو (أول 3 ثواني)</div>
+                        <div class="ku-text">سلاڤ و رێز — ئەز ژ پێشانگەها ئاڤان، وەرن ڤێ پارچێ پێکڤە ببینین.</div>
+                        <div>تحية واحترام — معكم فريق إيفان، تعالوا نشوف هالقطعة وتفاصيلها سوا.</div>
+                    </div>
+                    
+                    <div class="bubble-content">
+                        <div class="lang-title">رد خدمة العملاء (في أول 5 دقائق)</div>
+                        <div class="ku-text">بخێر هاتی بۆ ئاڤان — چەوا دشێم هاریکاریا تە بکەم؟</div>
+                        <div>أهلاً وسهلاً بيك عيني في إيفان — تفضل شلون أقدر أساعدك؟</div>
+                    </div>
+
+                    <div class="bubble-content">
+                        <div class="lang-title">التعامل مع القطعة المباعة</div>
+                        <div>نفدت عيني، بس عندنا بديل أقوى وبنفس السعر، تحب أرسلك صوره تشوفه؟ (ممنوع قول "ماكو" أو "نمابا برا ببورة"، قدم البديل فوراً).</div>
+                    </div>
+
+                    <div class="bubble-content">
+                        <div class="lang-title">إغلاق المحادثة (لا تنهها بجملة جافة)</div>
+                        <div>تحب أرسلك صور غرف النوم اللي تطابق هذا الكنب؟ (أغلق بسؤال مفتوح لإبقاء الزبون متفاعلاً).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dept-section" id="ads">
+            <div class="dept-header" style="color:var(--neon-green);">
+                <i class="fa-solid fa-bullseye" style="border-color:var(--neon-green);"></i>
+                <h3 style="color:var(--neon-green);">5. الترويج وإعادة الاستهداف <span>كيف نصرف الميزانية بذكاء (الصح مو العشوائي)؟</span></h3>
+            </div>
+            
+            <div class="grid-cards">
+                <div class="glass-card" style="grid-column: 1 / -1;">
+                    <div class="system-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <div class="system-item" style="border-color:var(--neon-green);">
+                            <div class="desc">
+                                <h5 style="color:var(--neon-green);">الخطأ الشائع: التمويل العشوائي</h5>
+                                <p>تمويل كل فيديو يتم نشره هو هدر للمال. السوق في 2026 يعتمد على اختبار المحتوى (Creative Testing) قبل ضخ الميزانية.</p>
+                            </div>
+                        </div>
+                        <div class="system-item" style="border-color:var(--neon-green);">
+                            <div class="desc">
+                                <h5 style="color:var(--neon-green);">الحل الصحيح: قاعدة الـ 5 دولار</h5>
+                                <p>ننشر المحتوى بشكل طبيعي (Organic). الفيديو الذي يحصل على تفاعل عالٍ ورسائل (مثلاً وصل 5K مشاهدات)، هو الذي نقوم بتمويله بـ 5$ يومياً، واستهداف (منطقة دهوك حصراً).</p>
+                            </div>
+                        </div>
+                        <div class="system-item" style="border-color:var(--neon-green);">
+                            <div class="desc">
+                                <h5 style="color:var(--neon-green);">إعادة الاستهداف (Retargeting)</h5>
+                                <p>المتابع البارد يحتاج لتعريف، لكن الشخص الذي شاهد فيديوهاتنا سابقاً أو راسل الصفحة هو زبون ساخن! نقوم بإنشاء إعلان (Custom Audience) مخصص فقط لمن تفاعل معنا ليظهر له عرض قوي يدفعه للشراء.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dept-section" id="action-plan">
+            <div class="dept-header" style="color:var(--neon-cyan);">
+                <i class="fa-solid fa-rocket" style="border-color:var(--neon-cyan);"></i>
+                <h3 style="color:var(--neon-cyan);">6. خطة التنفيذ السريعة (أول 30 يوم) <span>ابدأ من الغد لتحقيق النتائج.</span></h3>
+            </div>
+            
+            <div class="grid-cards">
+                <div class="glass-card" style="grid-column: 1 / -1;">
+                    <table class="custom-table" style="width: 100%; text-align: right; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: rgba(6, 182, 212, 0.2); color: var(--neon-cyan);">
+                                <th style="padding: 15px;">الجدول الزمني</th>
+                                <th style="padding: 15px;">المهمة الأساسية للإدارة والتسويق</th>
+                                <th style="padding: 15px;">الهدف (النتيجة المتوقعة)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);"><strong>الأسبوع الأول</strong><br><span style="font-size:12px; color:var(--text-muted);">تنظيف الأساس</span></td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">توحيد البيانات (NAP)، تحديث Google Business، كتابة وصف قوي، وتثبيت أسلوب الردود الموحدة للرسائل.</td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">ظهور أقوى وأكثر احترافية في خرائط جوجل.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);"><strong>الأسبوع الثاني</strong><br><span style="font-size:12px; color:var(--text-muted);">توليد الزخم</span></td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">البدء الصارم بطلب التقييمات من كل زبون (دون حوافز مادية حسب سياسة جوجل). تصوير ونشر 10 فيديوهات (70-20-10).</td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">رفع التقييمات وتقليل فكرة "المعرض الغالي" عبر الشرح.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);"><strong>الأسبوع الثالث</strong><br><span style="font-size:12px; color:var(--text-muted);">تشغيل الإعلانات</span></td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">إطلاق حملة ممولة لأفضل فيديو ناجح عضوياً باستهداف (دهوك فقط)، بحوار قصير جداً وأول 3 ثوانٍ قوية (Hook).</td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">زيادة ملحوظة في رسائل الصفحة الموجهة للبيع.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);"><strong>الأسبوع الرابع</strong><br><span style="font-size:12px; color:var(--text-muted);">التوسع وإعادة الاستهداف</span></td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">تشغيل حملة "إعادة استهداف" لكل من راسل الصفحة سابقاً، وتحويل كل زبون راضٍ إلى مسوق عبر تصويره.</td>
+                                <td style="padding: 15px; border-bottom: 1px solid var(--glass-border);">إغلاق الصفقات المعلقة، وزيادة الزيارات الميدانية.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="golden-rule" style="border-color:var(--neon-cyan);">
+                        <i class="fa-solid fa-triangle-exclamation" style="color:var(--neon-cyan);"></i>
+                        <p>⚠️ <strong>أهم نصيحة للإدارة:</strong> إذا لم نقم بضبط ملف Google Maps وإنتاج فيديوهات تشرح (القيمة وليس السعر فقط)، فلا يوجد أي إعلان ممول في العالم سينقذ الموقف. الأساس هو المحتوى والمصداقية.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </main>
 
+    <footer>
+        © 2026 Ivan Showroom - Marketing & Development Dept. | Prepared by Mazen Dawood.
+    </footer>
+
     <script>
-        // Sidebar Toggle Logic
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('mainContent');
-        const toggleBtn = document.getElementById('toggleSidebar');
+        // تغيير المود (Dark/Light)
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const themeIcon = themeToggle.querySelector('i');
 
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('hidden');
-            mainContent.classList.toggle('expanded');
-        });
-
-        // Responsive sidebar handling
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.add('hidden');
-                mainContent.classList.add('expanded');
+        themeToggle.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.className = 'fa-solid fa-moon';
+                particleColor = 'rgba(0, 210, 255, 0.3)';
             } else {
-                sidebar.classList.remove('hidden');
-                mainContent.classList.remove('expanded');
+                body.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fa-solid fa-sun';
+                particleColor = 'rgba(2, 132, 199, 0.15)';
             }
         });
 
-        // Initial check for mobile
-        if (window.innerWidth <= 768) {
-            sidebar.classList.add('hidden');
-            mainContent.classList.add('expanded');
+        // تأثير الظهور عند التمرير (Scroll Animation)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.dept-section').forEach((section) => {
+            observer.observe(section);
+        });
+
+        // حركة الجزيئات في الخلفية (Particles)
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles;
+        let particleColor = 'rgba(0, 210, 255, 0.3)';
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 45; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2 + 1,
+                    vx: Math.random() * 0.4 - 0.2,
+                    vy: Math.random() * 0.4 - 0.2
+                });
+            }
         }
 
-        // Theme Toggle Logic
-        const themeBtn = document.getElementById('toggleTheme');
-        
-        // Check local storage for theme preference
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', currentTheme);
-
-        themeBtn.addEventListener('click', () => {
-            let theme = document.documentElement.getAttribute('data-theme');
-            let newTheme = theme === 'light' ? 'dark' : 'light';
+        function drawParticles() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = particleColor;
             
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-
-        // Smooth Scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                // On mobile, close sidebar after clicking a link
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.add('hidden');
-                    mainContent.classList.add('expanded');
-                }
-
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
             });
-        });
+
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = particleColor.replace('0.3', (1 - dist/130) * 0.15);
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(drawParticles);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        drawParticles();
     </script>
 </body>
 </html>
